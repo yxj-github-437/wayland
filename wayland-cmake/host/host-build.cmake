@@ -1,6 +1,10 @@
 find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
 
 if (NOT WAYLAND_SCANNER_EXECUTABLE)
+    if (CMAKE_HOST_WIN32)
+        set(EXECUTABLE_SUFFIX .exe)
+    endif()
+
     include(ExternalProject)
     ExternalProject_Add(wayland-scanner.cross
         PREFIX wayland-scanner.cross
@@ -15,7 +19,7 @@ if (NOT WAYLAND_SCANNER_EXECUTABLE)
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/libexpat/ <SOURCE_DIR>/libexpat/
         CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>"
         CMAKE_ARGS "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-        BUILD_BYPRODUCTS <INSTALL_DIR>/bin/wayland-scanner)
+        BUILD_BYPRODUCTS <INSTALL_DIR>/bin/wayland-scanner${EXECUTABLE_SUFFIX})
 
     ExternalProject_Get_Property(wayland-scanner.cross install_dir)
 
