@@ -20,6 +20,9 @@ endif()
 find_package(Patch REQUIRED)
 set(patch_command ${Patch_EXECUTABLE} -p1 -i)
 
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
 
 option(WAYLAND_BUILD_SCANNER "Compile wayland-scanner binary" ON)
 option(WAYLAND_BUILD_LIBRARIES "Compile Wayland libraries" ON)
