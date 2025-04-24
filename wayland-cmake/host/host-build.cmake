@@ -1,7 +1,9 @@
+add_executable(wayland::scanner-cross IMPORTED GLOBAL)
+
 find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
 
-if (NOT WAYLAND_SCANNER_EXECUTABLE)
-    if (CMAKE_HOST_WIN32)
+if(NOT WAYLAND_SCANNER_EXECUTABLE)
+    if(CMAKE_HOST_WIN32)
         set(EXECUTABLE_SUFFIX .exe)
     endif()
 
@@ -23,16 +25,9 @@ if (NOT WAYLAND_SCANNER_EXECUTABLE)
 
     ExternalProject_Get_Property(wayland-scanner.cross install_dir)
 
-    if (CMAKE_HOST_WIN32)
-        set(EXECUTABLE_SUFFIX .exe)
-    endif()
-    set(WAYLAND_SCANNER_EXECUTABLE  ${install_dir}/bin/wayland-scanner${EXECUTABLE_SUFFIX})
-    add_executable(wayland::scanner-cross IMPORTED GLOBAL)
-    set_target_properties(wayland::scanner-cross PROPERTIES
-        IMPORTED_LOCATION ${WAYLAND_SCANNER_EXECUTABLE})
+    set(WAYLAND_SCANNER_EXECUTABLE ${install_dir}/bin/wayland-scanner${EXECUTABLE_SUFFIX})
     add_dependencies(wayland::scanner-cross wayland-scanner.cross)
-else()
-    add_executable(wayland::scanner-cross IMPORTED GLOBAL)
-    set_property(TARGET wayland::scanner-cross PROPERTY IMPORTED_LOCATION
-        ${WAYLAND_SCANNER_EXECUTABLE})
 endif()
+
+set_target_properties(wayland::scanner-cross PROPERTIES
+    IMPORTED_LOCATION ${WAYLAND_SCANNER_EXECUTABLE})
