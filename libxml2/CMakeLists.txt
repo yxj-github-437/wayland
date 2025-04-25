@@ -6,11 +6,13 @@ if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
 endif()
 
-set(libxml2_version 2.13.5)
+include(FetchContent)
+
+set(libxml2_version 2.14.2)
 FetchContent_Declare(
     libxml2
     URL https://github.com/GNOME/libxml2/archive/refs/tags/v${libxml2_version}.tar.gz
-    URL_HASH SHA256=87d681718760ba42e749a61482d71b34d1d566843e9ade39a73fea92caf8293b)
+    URL_HASH SHA256=9e214d161df6fb98c99a045344f0b684a98b6c81834d2552e3a2ceca1740a716)
 set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
 set(LIBXML2_WITH_ICONV OFF CACHE INTERNAL "")
 set(LIBXML2_WITH_DEBUG OFF CACHE INTERNAL "")

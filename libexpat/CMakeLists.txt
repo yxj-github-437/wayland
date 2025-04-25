@@ -7,10 +7,13 @@ if(POLICY CMP0135)
 endif()
 
 include(FetchContent)
+
+set(expat_version 2.7.1)
+string(REPLACE "." "_" _version ${expat_version})
 FetchContent_Declare(
     expat
-    URL https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.xz
-    URL_HASH SHA256=a695629dae047055b37d50a0ff4776d1d45d0a4c842cf4ccee158441f55ff7ee)
+    URL https://github.com/libexpat/libexpat/releases/download/R_${_version}/expat-${expat_version}.tar.xz
+    URL_HASH SHA256=354552544b8f99012e5062f7d570ec77f14b412a3ff5c7d8d0dae62c0d217c30)
 set(EXPAT_SHARED_LIBS OFF CACHE INTERNAL "")
 set(EXPAT_BUILD_TOOLS OFF CACHE INTERNAL "")
 set(EXPAT_BUILD_EXAMPLES OFF CACHE INTERNAL "")
