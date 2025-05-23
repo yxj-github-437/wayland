@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(libxml2)
+project(libxml2 VERSION 2.14.3)
 
 if(POLICY CMP0135)
     cmake_policy(SET CMP0135 NEW)
@@ -8,11 +8,11 @@ endif()
 
 include(FetchContent)
 
-set(libxml2_version 2.14.2)
+set(libxml2_version ${PROJECT_VERSION})
 FetchContent_Declare(
     libxml2
     URL https://github.com/GNOME/libxml2/archive/refs/tags/v${libxml2_version}.tar.gz
-    URL_HASH SHA256=9e214d161df6fb98c99a045344f0b684a98b6c81834d2552e3a2ceca1740a716)
+    URL_HASH SHA256=e282bfeb750be5f4baf98195c6393f9b7beadc6bed4d85e7ca37a66f56394b5f)
 set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
 set(LIBXML2_WITH_ICONV OFF CACHE INTERNAL "")
 set(LIBXML2_WITH_DEBUG OFF CACHE INTERNAL "")
