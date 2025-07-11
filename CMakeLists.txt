@@ -83,9 +83,14 @@ endif()
 message(STATUS "")
 message(STATUS "===========================================================================")
 
+include(GNUInstallDirs)
+
 if(WAYLAND_BUILD_SCANNER)
     install(TARGETS wayland-scanner
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+    install(DIRECTORY ${PROJECT_BINARY_DIR}/protocol
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/wayland)
 endif()
 
 if(WAYLAND_BUILD_LIBRARIES)
