@@ -36,7 +36,8 @@ if(NOT WAYLAND_SCANNER_EXECUTABLE)
         CMAKE_ARGS "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         BUILD_BYPRODUCTS ${WAYLAND_SCANNER_EXECUTABLE}
         UPDATE_COMMAND ""
-        INSTALL_COMMAND "")
+        INSTALL_COMMAND ""
+        BUILD_ALWAYS TRUE)
 
     add_dependencies(wayland::scanner-cross wayland-scanner.cross)
 endif()
