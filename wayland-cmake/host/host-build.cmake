@@ -25,7 +25,14 @@ if(NOT WAYLAND_SCANNER_EXECUTABLE)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/host/host-CMakeLists.cmake
         ${HOST_WAYLAND_SCANNER_SOURCE}/CMakeLists.txt COPYONLY)
 
-    file(CREATE_LINK ${PROJECT_SOURCE_DIR}/libexpat ${HOST_WAYLAND_SCANNER_SOURCE}/libexpat SYMBOLIC)
+    include(FetchContent)
+    FetchContent_GetProperties(expat)
+
+    if(EXISTS ${expat_SOURCE_DIR})
+        file(CREATE_LINK ${expat_SOURCE_DIR} ${HOST_WAYLAND_SCANNER_SOURCE}/libexpat SYMBOLIC)
+    else()
+        file(CREATE_LINK ${PROJECT_SOURCE_DIR}/libexpat ${HOST_WAYLAND_SCANNER_SOURCE}/libexpat SYMBOLIC)
+    endif()
 
     set(WAYLAND_SCANNER_EXECUTABLE ${HOST_WAYLAND_SCANNER_BINARY}/wayland-scanner${EXECUTABLE_SUFFIX})
 
@@ -33,7 +40,12 @@ if(NOT WAYLAND_SCANNER_EXECUTABLE)
     ExternalProject_Add(wayland-scanner.cross
         SOURCE_DIR ${HOST_WAYLAND_SCANNER_SOURCE}
         BINARY_DIR ${HOST_WAYLAND_SCANNER_BINARY}
-        CMAKE_ARGS "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+        CMAKE_ARGS -DCMAKE_BUILD_TYPE=RelWithDebInfo
+            -DEXPAT_SHARED_LIBS=OFF
+            -DEXPAT_BUILD_TESTS=OFF
+            -DEXPAT_BUILD_EXAMPLES=OFF
+            -DEXPAT_BUILD_TOOLS=OFF
+            -DEXPAT_ENABLE_INSTALL=OFF
         BUILD_BYPRODUCTS ${WAYLAND_SCANNER_EXECUTABLE}
         UPDATE_COMMAND ""
         INSTALL_COMMAND ""
