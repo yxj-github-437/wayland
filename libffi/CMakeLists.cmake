@@ -335,6 +335,7 @@ endif()
 
 if(FFI_SHARED_LIB)
     add_library(ffi_shared SHARED $<TARGET_OBJECTS:ffi_core>)
+    add_library(ffi ALIAS ffi_shared)
     target_include_directories(ffi_shared
         PUBLIC
         ${PROJECT_BINARY_DIR}/include
