@@ -45,10 +45,7 @@ endif()
 
 if (WAYLAND_BUILD_SCANNER)
     add_subdirectory(libexpat)
-    find_package(Python3 COMPONENTS Interpreter Development)
-    if (Python3_EXECUTABLE)
-        add_subdirectory(libxml2)
-    endif()
+    add_subdirectory(libxml2)
 endif()
 
 include(FetchContent)

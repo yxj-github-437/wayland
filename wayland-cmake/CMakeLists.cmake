@@ -15,18 +15,6 @@ set(WAYLAND_VERSION_MICRO ${VERSION_2})
 set(WAYLAND_VERSION ${VERSION_0}.${VERSION_1}.${VERSION_2})
 message(STATUS "wayland version: ${WAYLAND_VERSION}")
 
-if(WAYLAND_BUILD_SCANNER AND Python3_EXECUTABLE)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/include
-        COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd wayland_dtd >
-            ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
-        DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd)
-endif()
-
 if(WAYLAND_BUILD_LIBRARIES)
     if(FFI_SHARED_LIB)
         set(FFI_LIB ffi)
@@ -88,14 +76,23 @@ if(WAYLAND_BUILD_SCANNER)
         expat)
     target_link_options(wayland-scanner PRIVATE -Wl,--as-needed)
 
-    if(Python3_EXECUTABLE)
-        target_compile_definitions(wayland-scanner PRIVATE -DHAVE_LIBXML=1)
-        target_sources(wayland-scanner PRIVATE
-            ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h)
-        target_include_directories(wayland-scanner PRIVATE
-            ${CMAKE_CURRENT_BINARY_DIR}/include)
-        target_link_libraries(wayland-scanner LibXml2)
-    endif()
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/include
+        COMMAND ${CMAKE_COMMAND} -DINPUT=${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd
+            -DOUTPUT=${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h
+            -DIDENT=wayland_dtd
+            -P ${PROJECT_SOURCE_DIR}/cmake/bin2c.cmake
+        DEPENDS
+            ${PROJECT_SOURCE_DIR}/cmake/bin2c.cmake
+            ${CMAKE_CURRENT_SOURCE_DIR}/protocol/wayland.dtd)
+
+    target_compile_definitions(wayland-scanner PRIVATE -DHAVE_LIBXML=1)
+    target_sources(wayland-scanner PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/include/wayland.dtd.h)
+    target_include_directories(wayland-scanner PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/include)
+    target_link_libraries(wayland-scanner LibXml2)
 
     set_property(TARGET wayland-scanner
         PROPERTY RUNTIME_OUTPUT_DIRECTORY
